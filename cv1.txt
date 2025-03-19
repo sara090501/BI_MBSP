@@ -1,0 +1,4 @@
+Polohu jedinca budeme zaznamenavat pomocou suradnic C = [Cx,Cy] 
+Casove rezy: C(1), C(2), C(3),...
+Vektor rychlosti: V = [Vx,Vy]
+C(1) = C(0) + V(0) * delta t
