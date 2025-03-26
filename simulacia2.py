@@ -44,9 +44,9 @@ print("Priemerny cas servise:", sum(s)/n) #xt
 print("Priemerny cas celkovo:", sum(w)/n) #lt
 
 # l, q, x
-print("l:", 1/max(c) * sum(w))
-print("q:", 1/max(c) * sum(d))
-print("x:", 1/max(c) * sum(s))
+print("l: priemerny pocet uloh v uzle:", 1/max(c) * sum(w)) # lt pocet uloh v uzle v case t (v tejto simulacii -> l(priemer) = 1/T suma od 1 do n z wi)
+print("q: priemerny pocet uloh v rade", 1/max(c) * sum(d)) # qt pocet uloh v rade v case t (v tejto simulacii -> l(priemer) = 1/T suma od 1 do n z di)
+print("x: priemerny pocet uloh v servise", 1/max(c) * sum(s)) # xt pocet uloh v servise v case t (v tejto simulacii -> l(priemer) = 1/T suma od 1 do n z si)
 
 # # Initialize completion times and waiting times
 # c = [0] * len(a)
