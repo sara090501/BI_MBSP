@@ -47,3 +47,8 @@ print("Casy konca v uzle:", c)
 print("Casy cakania:", d)
 print("Celkovy cas v uzle:", w)
 
+# l, q, x
+print("l: priemerny pocet uloh v uzle:", 1/max(c) * sum(w)) # lt pocet uloh v uzle v case t (v tejto simulacii -> l(priemer) = 1/T suma od 1 do n z wi)
+print("q: priemerny pocet uloh v rade", 1/max(c) * sum(d)) # qt pocet uloh v rade v case t (v tejto simulacii -> l(priemer) = 1/T suma od 1 do n z di)
+print("x: priemerny pocet uloh v servise", 1/max(c) * sum(s)) # xt pocet uloh v servise v case t (v tejto simulacii -> l(priemer) = 1/T suma od 1 do n z si)
+
