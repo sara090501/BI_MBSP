@@ -36,9 +36,9 @@ while i < len(a):
     i += 1
 
 # Output results
-print("Completion times:", c)
-print("Waiting times:", d)
-print("Waiting times:", w)
+print("Casy konca v uzle:", c)
+print("Casy cakania:", d)
+print("Colkovy cas v uzle:", w)
 
 # # Initialize completion times and waiting times
 # c = [0] * len(a)
