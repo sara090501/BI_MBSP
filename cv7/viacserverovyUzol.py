@@ -38,16 +38,27 @@ def getFreeServer():
 
 while t < tau and l > 0:
     min_value = min(cal)
-    min_index = cal.index(min_value)
+    M = cal.index(min_value)
     #handling prichodu
-    if min_index == 0: # prichod jobu
+    if M == 0: # prichod jobu
         t = cal.index(min_value)
         l = l + 1
         cal[min_value] = t + rv.rvs()
-    else:
-        s = getFreeServer() # od o po c-1
-        x[s] = 1 # server je obsadeny
-        cal[s+1] = t + sj.rvs() #uniform od 15 do 25
+        if l > c: # servery plne
+            #ohandlujem radu -> pridanie
+            dorobitHadlovanie = 0
+        else:
+            s = getFreeServer() # od o po c-1
+            x[s] = 1 # server je obsadeny
+            cal[s+1] = t + sj.rvs() #uniform od 15 do 25
+    else: #odchod zo servera
+        l = l - 1
+        if l >= c: #niekto ostal v rade
+            #ohandlujem radu -> odobratie
+            cal[M] = t + sj.rvs()
+        else:
+            x[M - 1] = 0
+            cal[M] = BN
 
 # # Parametre simulácie
 # ARRIVAL_MIN = 3  # Min čas medzi príchodmi
