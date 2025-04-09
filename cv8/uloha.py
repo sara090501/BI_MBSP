@@ -1,3 +1,15 @@
+# Úloha 1: Naprogramujte NSSU.  Spoločne navrhnite dátové štruktúry. Navrhnite charakteristiky analogické ku area_node, area_queue, area_service, area_server_x. Simuláciu nastavte na parametre nášho problému s dobrovoľníkmi a lekármi:
+# Majme náš modelový príklad o pacientoch prichádzajúcich do čakárne a lekároch, ktorí ich vyšetrujú. Pacienti prichádzajú v intervaloch z trojuholníkového rozdelenia T(3,5,12). Každý lekár vyšetrí pacienta za náhodný čas z rovnomerneho rozdelenia U(5,25). Pacienti sú prideľovaní tak, aby boli lekári spravodlivo vyťažovaní. Žiadny pacient nejde na vyšetrenie po skončení 8h zmeny.
+#
+# Disciplína v rade: FIFO
+# Výber servera: Cyklický
+#
+# •	Pre daný počet lekárov c = 4 vykreslite histogram ich vyťaženosti.
+# •	Vypíšte priemernú čakaciu dobu.
+# •	Vykreslite závislosť počtu vyšetrených pacientov od času.
+# •	Vykreslite priebeh počtu ľudí v rade
+
+
 import random
 import heapq
 import matplotlib.pyplot as plt
@@ -73,7 +85,7 @@ def triangular_interarrival():
 
 def uniform_service():
     # Rovnomerné rozdelenie U(5,25)
-    return random.uniform(5, 25)
+    return random.uniform(15, 40)
 
 
 def simulation():
