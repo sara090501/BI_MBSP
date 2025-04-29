@@ -45,7 +45,6 @@ for day in range(days_front):
     D_s[day+1] = D_s[day] + new_die
 
 # 2) Príprava polí pre civilné prostredie
-# Celkový čas od 0 (začiatok návratu) do days_civ + days_front
 T = days_front + days_civ
 t = np.arange(T + 1)
 S_c_no = np.zeros(T + 1)
@@ -56,40 +55,36 @@ S_c_int = np.zeros(T + 1)
 I_c_int = np.zeros(T + 1)
 R_c_int = np.zeros(T + 1)
 D_c_int = np.zeros(T + 1)
-# Začiatočné hodnoty
+
+# Začiatočné hodnoty po migrácii prvých vojakov
 S_c_no[0] = S_c0 + m * S_s[-1]
 I_c_no[0] = I_c0 + m * I_s[-1]
 R_c_no[0] = R_c0 + m * R_s[-1]
 D_c_no[0] = D_c0 + m * D_s[-1]
 S_c_int[0], I_c_int[0], R_c_int[0], D_c_int[0] = S_c_no[0], I_c_no[0], R_c_no[0], D_c_no[0]
 
-# Migrácia ďalších vojakov a šírenie v civilnom prostredí
+# Migrácia a šírenie v civilnom prostredí
 for day in range(1, T+1):
-    # Každodenná migrácia z frontu, až kým sú vojaci
     if day <= days_front:
         mig_S = m * S_s[day]
         mig_I = m * I_s[day]
         mig_R = m * R_s[day]
     else:
         mig_S = mig_I = mig_R = 0
-    # Bez opatrení
+    # Scenár bez opatrení
     N_c = S_c_no[day-1] + I_c_no[day-1] + R_c_no[day-1]
-    beta_c = beta_c_base
-    new_inf_no = beta_c * S_c_no[day-1] * I_c_no[day-1] / N_c
+    new_inf_no = beta_c_base * S_c_no[day-1] * I_c_no[day-1] / N_c
     new_rec_no = gamma * (1 - CFR_c) * I_c_no[day-1]
     new_die_no = gamma * CFR_c * I_c_no[day-1]
     S_c_no[day] = S_c_no[day-1] - new_inf_no + mig_S
     I_c_no[day] = I_c_no[day-1] + new_inf_no - new_rec_no - new_die_no + mig_I
     R_c_no[day] = R_c_no[day-1] + new_rec_no + mig_R
     D_c_no[day] = D_c_no[day-1] + new_die_no
-    # S opatreniami: po intervention_delay dňoch zníženie beta
-    N_c_i = S_c_int[day-1] + I_c_int[day-1] + R_c_int[day-1]
+    # Scenár s opatreniami
     days_since_return = day - 1
-    if days_since_return >= intervention_delay:
-        beta_c_eff = beta_c_base * 0.5
-    else:
-        beta_c_eff = beta_c_base
-    new_inf_i = beta_c_eff * S_c_int[day-1] * I_c_int[day-1] / N_c_i
+    beta_eff = beta_c_base * 0.5 if days_since_return >= intervention_delay else beta_c_base
+    N_ci = S_c_int[day-1] + I_c_int[day-1] + R_c_int[day-1]
+    new_inf_i = beta_eff * S_c_int[day-1] * I_c_int[day-1] / N_ci
     new_rec_i = gamma * (1 - CFR_c) * I_c_int[day-1]
     new_die_i = gamma * CFR_c * I_c_int[day-1]
     S_c_int[day] = S_c_int[day-1] - new_inf_i + mig_S
@@ -97,9 +92,29 @@ for day in range(1, T+1):
     R_c_int[day] = R_c_int[day-1] + new_rec_i + mig_R
     D_c_int[day] = D_c_int[day-1] + new_die_i
 
+# Vrchol infekcií u vojakov
+npeak = np.argmax(I_s)
+peak_count = I_s[npeak]
+print(f"Vrchol aktívnych infekcií vojakov nastal v dni {npeak} s počtom {int(peak_count)} vojakov.")
+
+# Analýza výsledkov
+# Celkové úmrtia
+total_deaths_no = D_c_no[-1]
+total_deaths_int = D_c_int[-1]
+diff_deaths = total_deaths_no - total_deaths_int
+percent_diff = diff_deaths / total_deaths_no * 100
+# Vrchol pandémie
+day_peak_no = np.argmax(I_c_no)
+day_peak_int = np.argmax(I_c_int)
+
+print(f"Úmrtia bez opatrení: {int(total_deaths_no):,}")
+print(f"Úmrtia s opatreniami: {int(total_deaths_int):,}")
+print(f"Rozdiel v úmrtiach: {int(diff_deaths):,} ({percent_diff:.2f} % zníženie)")
+print(f"Vrchol pandémie bez opatrení nastal v dni {day_peak_no}")
+print(f"Vrchol pandémie s opatreniami nastal v dni {day_peak_int}")
+
 # Vykreslenie porovnávacích grafov
 plt.figure(figsize=(12,5))
-# Porovnanie nakazených
 plt.subplot(1,2,1)
 plt.plot(t, I_c_no, label='Bez opatrení')
 plt.plot(t, I_c_int, label='S opatreniami', linestyle='--')
@@ -109,8 +124,7 @@ plt.title('Civilné infekcie: bez vs. s opatreniami')
 plt.legend()
 plt.grid(True)
 
-plt.figure(figsize=(12,5))
-# Porovnanie úmrtí\plt.subplot(1,2,2)
+plt.subplot(1,2,2)
 plt.plot(t, D_c_no, label='Bez opatrení')
 plt.plot(t, D_c_int, label='S opatreniami', linestyle='--')
 plt.xlabel('Dni od začiatku návratu')
