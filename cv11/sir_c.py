@@ -108,6 +108,8 @@ plt.ylabel('Aktívne infekcie (I)')
 plt.title('Civilné infekcie: bez vs. s opatreniami')
 plt.legend()
 plt.grid(True)
+
+plt.figure(figsize=(12,5))
 # Porovnanie úmrtí\plt.subplot(1,2,2)
 plt.plot(t, D_c_no, label='Bez opatrení')
 plt.plot(t, D_c_int, label='S opatreniami', linestyle='--')
